@@ -26,7 +26,7 @@
             <Button fx:id="clearButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearAll" text="Clear All" />
             </items>
         </ToolBar>
-        <TableView fx:id="tableView" editable="true" prefHeight="223.0" prefWidth="600.0">
+        <TableView fx:id="tableView" editable="true" prefHeight="195.0" prefWidth="600.0">
             <columns>
                 <TableColumn fx:id="nameCol" prefWidth="217.0" text="Item Name " />
                 <TableColumn fx:id="serialCol" prefWidth="256.0" text="Serial Number" />
@@ -87,38 +87,64 @@
         </HBox>
         <HBox prefHeight="31.0" prefWidth="600.0" spacing="20.0">
             <children>
-                <Button fx:id="saveTSVButton" mnemonicParsing="false" onAction="#saveListTSV" prefHeight="17.0" prefWidth="82.0" text=" Save List to TSV">
+                <Button fx:id="saveTSVButton" mnemonicParsing="false" onAction="#saveListTSV" prefHeight="17.0" prefWidth="101.0" text=" Save List to TSV">
                     <font>
                         <Font size="9.0" />
                     </font>
+               <HBox.margin>
+                  <Insets bottom="10.0" />
+               </HBox.margin>
                 </Button>
-            <Button fx:id="saveHTMLButton" layoutX="20.0" layoutY="25.0" mnemonicParsing="false" onAction="#saveListHTML" prefHeight="17.0" prefWidth="95.0" text="Save List to HTML">
+            <Button fx:id="saveJSONButton" layoutX="77.0" layoutY="25.0" mnemonicParsing="false" onAction="#saveListJSON" prefHeight="17.0" prefWidth="107.0" text="Save List to JSON">
                <font>
                   <Font size="9.0" />
                </font>
             </Button>
-            <Button fx:id="saveJSONButton" layoutX="77.0" layoutY="25.0" mnemonicParsing="false" onAction="#saveListJSON" prefHeight="17.0" prefWidth="94.0" text="Save List to JSON">
+            <Button fx:id="saveHTMLButton" layoutX="20.0" layoutY="25.0" mnemonicParsing="false" onAction="#saveListHTML" prefHeight="17.0" prefWidth="107.0" text="Save List to HTML">
                <font>
                   <Font size="9.0" />
                </font>
             </Button>
-                <Button fx:id="loadButton" mnemonicParsing="false" onAction="#loadList" prefHeight="10.0" prefWidth="55.0" text="Load List">
-                    <font>
-                        <Font size="9.0" />
-                    </font>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#userGuide" text="User Guide">
-                    <font>
-                        <Font size="9.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets left="125.0" />
-                    </HBox.margin>
-                </Button>
             </children>
             <padding>
                 <Insets left="10.0" top="15.0" />
             </padding>
         </HBox>
+      <HBox prefHeight="25.0" prefWidth="600.0" spacing="20.0">
+         <children>
+                <Button fx:id="loadTSVButton" mnemonicParsing="false" onAction="#loadTSVList" prefHeight="17.0" prefWidth="100.0" text="Load List From TSV">
+                    <font>
+                        <Font size="9.0" />
+                    </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+                </Button>
+            <Button fx:id="loadJsonButton" mnemonicParsing="false" onAction="#loadJsonList" prefHeight="17.0" prefWidth="108.0" text="Load List From JSON">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="loadHTMLButton" mnemonicParsing="false" onAction="#loadHTMLList" prefHeight="17.0" prefWidth="108.0" text="Load List From HTML">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+                <Button mnemonicParsing="false" onAction="#userGuide" text="User Guide">
+                    <font>
+                        <Font size="9.0" />
+                    </font>
+               <HBox.margin>
+                  <Insets left="150.0" />
+               </HBox.margin>
+                </Button>
+         </children>
+      </HBox>
     </children>
 </VBox>

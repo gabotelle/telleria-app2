@@ -1,29 +1,25 @@
 package baseline;
 
+import com.google.gson.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import javax.swing.*;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.Scanner;
 
 public class FXMLController {
-
-    @FXML
-    private Button showButton;
-
-    @FXML
-    private Button clearButton;
 
     @FXML
     private TableView<InventoryItem> tableView;
@@ -47,28 +43,7 @@ public class FXMLController {
     private TextField valueField;
 
     @FXML
-    private Button addButton;
-
-    @FXML
-    private Button removeButton;
-
-    @FXML
-    private Button searchButton;
-
-    @FXML
     private Text errorText;
-
-    @FXML
-    private Button saveTSVButton;
-
-    @FXML
-    private Button saveHTMLButton;
-
-    @FXML
-    private Button saveJSONButton;
-
-    @FXML
-    private Button loadButton;
 
     private final ObservableList<InventoryItem> data = FXCollections.observableArrayList();
     private final ObservableList<InventoryItem> search = FXCollections.observableArrayList();
@@ -147,7 +122,7 @@ public class FXMLController {
     }
 
     private boolean serialValid(String input) {
-        if (!input.matches("[A-Za-z]{1}[-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}")) {
+        if (!input.matches("[A-Za-z][-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}")) {
             errorText.setText("Serial format: A-XXX-XXX-XXX \n <A is a letter> <X is a letter/number>");
             return false;
         }
@@ -184,8 +159,84 @@ public class FXMLController {
     }
 
     @FXML
-    void loadList(ActionEvent event) {
+    void loadHTMLList(ActionEvent event) {
+        File file = getFile();
+        loadHTMLFile(file);
+    }
 
+    private void loadHTMLFile(File file) {
+        if(file != null){
+            try {
+                FileInputStream inputFile = new FileInputStream(file);
+                Scanner sc = new Scanner(inputFile);
+                data.clear();
+                search.clear();
+                String input = sc.nextLine();
+                while(!input.equalsIgnoreCase("</table>")){
+                    sc.nextLine();
+                    input = sc.nextLine();
+                    String[] item = new String[3];
+                    for (int i = 0; i < 3; i++) {
+                        int end = input.indexOf("</td>");
+                        item[i] = input.substring(12, end);
+                        input = sc.nextLine();
+                    }
+                    addToObservableList(item[0],item[1], item[2]);
+                }
+                sc.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    void loadTSVList(ActionEvent event) {
+        File file = getFile();
+        loadTSVFile(file);
+    }
+
+    @FXML
+    void loadJsonList(ActionEvent event) {
+        File file = getFile();
+        loadJsonFile(file);
+    }
+
+    public void loadJsonFile(File file){
+        JsonArray items = new JsonArray();
+        try {
+            JsonObject json = (JsonObject) JsonParser.parseReader(new FileReader(file));
+            data.clear();
+            items =  (JsonArray)json.get("items");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        for (JsonElement item: items){
+                addToObservableList(item.getAsJsonObject().get("name").getAsString(),
+                        item.getAsJsonObject().get("serial").getAsString(),
+                        item.getAsJsonObject().get("value").getAsString());
+        }
+    }
+
+    public void loadTSVFile(File file) {
+        if (file != null) {
+            try {
+                FileInputStream inputFile = new FileInputStream(file);
+                Scanner sc = new Scanner(inputFile);
+                data.clear();
+                search.clear();
+                String[] input = sc.nextLine().split(" {4}");
+                for(int i = 0; i < input.length; i += 3){
+                    addToObservableList(input[i], input[i+1], input[i+2]);
+                }
+                sc.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            errorText.setText("File does not exist");
+        }
     }
 
     @FXML
@@ -196,17 +247,93 @@ public class FXMLController {
 
     @FXML
     void saveListHTML(ActionEvent event) {
+        File file = getFile();
+        writeSaveHTMLFile(file);
+    }
 
+    private void writeSaveHTMLFile(File file) {
+        if (file != null) {
+            try {
+                PrintWriter writer;
+                writer = new PrintWriter(file);
+                StringBuilder saveText = new StringBuilder();
+                saveText.append("<table>\n");
+                for (InventoryItem item: data) {
+
+                    saveText.append("    <tr>\n        <td>").append(item.getName()).append("</td>\n        <td>").append(item.getSerial())
+                            .append("</td>\n        <td>").append(item.getValue()).append("</td>\n    </tr>\n");
+                }
+                saveText.append("</table>");
+                writer.println(saveText);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            errorText.setText("File does not exist");
+        }
     }
 
     @FXML
     void saveListJSON(ActionEvent event) {
+        File file = getFile();
+        writeSaveJsonFile(file);
+    }
 
+    public void writeSaveJsonFile(File file){
+        if (file != null) {
+            try {
+                PrintWriter writer;
+                writer = new PrintWriter(file);
+                StringBuilder saveText = new StringBuilder();
+                saveText.append("{\n  \"items\" : [\n");
+                boolean first = true;
+                for (InventoryItem item: data) {
+                    if(!first){
+                        saveText.append(",\n");
+                    }
+                    first = false;
+                    saveText.append("    {\"name\" : \"").append(item.getName()).append("\", \"serial\" : \"").append(item.getSerial())
+                            .append("\", \"value\" : \"").append(item.getValue()).append("\" }");
+                }
+                saveText.append("\n  ]\n}");
+                writer.println(saveText);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            errorText.setText("File does not exist");
+        }
     }
 
     @FXML
     void saveListTSV(ActionEvent event) {
+        File file  = getFile();
+        writeSaveTSVFile(file);
+    }
 
+    public void writeSaveTSVFile(File file) {
+        if (file != null) {
+            try {
+                PrintWriter writer;
+                writer = new PrintWriter(file);
+                StringBuilder saveText = new StringBuilder();
+                for (InventoryItem item: data) {
+                    saveText.append(item.getName()).append("    ").append(item.getSerial())
+                            .append("    ").append(item.getValue()).append("    ");
+                }
+                writer.println(saveText);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            errorText.setText("File does not exist");
+        }
     }
 
     @FXML
@@ -237,5 +364,14 @@ public class FXMLController {
 
     }
 
+    public ObservableList<InventoryItem> getObservableList() {
+        return data;
+    }
+
+    private File getFile(){
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open File");
+        return chooser.showOpenDialog(new Stage());
+    }
 }
 

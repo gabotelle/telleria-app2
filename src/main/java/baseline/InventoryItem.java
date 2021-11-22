@@ -3,9 +3,9 @@ package baseline;
 import javafx.beans.property.SimpleStringProperty;
 
 public class InventoryItem {
-    private SimpleStringProperty name;
-    private SimpleStringProperty serial;
-    private SimpleStringProperty value;
+    private final SimpleStringProperty name;
+    private final SimpleStringProperty serial;
+    private final SimpleStringProperty value;
 
     public InventoryItem(String name, String serial, String value){
         this.name = new SimpleStringProperty(name);
