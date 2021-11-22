@@ -367,6 +367,7 @@ public class FXMLController {
     @FXML
     void searchList(ActionEvent event) {
         isInList(nameField.getText(), serialField.getText());
+        tableView.setItems(search);
     }
 
     //search list by name or serial
@@ -379,7 +380,6 @@ public class FXMLController {
                 flag = true;
             }
         }
-        tableView.setItems(search);
         return flag;
     }
 

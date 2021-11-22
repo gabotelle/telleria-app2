@@ -2,6 +2,8 @@ package baseline;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FXMLControllerTest {
@@ -32,7 +34,8 @@ class FXMLControllerTest {
         fx.addToObservableList("SmartPhone", "A-123-123-123", "899.99");
         fx.addToObservableList("Laptop", "A-123-ABC-123", "2000");
 
-        assertTrue(fx.isInList("SmartPhone", ""));
-        assertTrue(fx.isInList("", "A-123-ABC-123"));
+        assertTrue(fx.isInList("SmartPhone", "aha"));
+        assertTrue(fx.isInList("sjs", "A-123-ABC-123"));
     }
+
 }

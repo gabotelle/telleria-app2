@@ -1,6 +1,7 @@
 {
   "items" : [
-    {"name" : "something", "serial" : "a-123-123-123", "value" : "$8,383.00" },
-    {"name" : "noc", "serial" : "a-000-000-000", "value" : "$838.00" }
+    {"name" : "Smart Phone", "serial" : "A-123-123-123", "value" : "$93,939.00" },
+    {"name" : "Laptop", "serial" : "A-12P-POI-P98", "value" : "$2,000.00" },
+    {"name" : "Something", "serial" : "A-893-E44-555", "value" : "$39.00" }
   ]
 }
