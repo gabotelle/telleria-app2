@@ -10,6 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -48,6 +50,8 @@ public class FXMLController {
     private final ObservableList<InventoryItem> data = FXCollections.observableArrayList();
     private final ObservableList<InventoryItem> search = FXCollections.observableArrayList();
 
+
+    //make cells editable
     @FXML
     public void initialize(){
         nameCol.setCellValueFactory(
@@ -81,6 +85,8 @@ public class FXMLController {
     }
 
 
+    //validate input
+    //add valid item to list
     @FXML
     void addToList(ActionEvent event) {
         if(validInput(nameField.getText(), serialField.getText(), valueField.getText())){
@@ -94,10 +100,12 @@ public class FXMLController {
         valueField.clear();
     }
 
+    //validate name, serial, and value input
     public boolean validInput(String name, String serial, String value){
         return nameValid(name) && valueValid(value) && serialValid(serial);
     }
 
+    //make sure serial is unique
     private boolean serialInList(String serial){
         for (InventoryItem item: data) {
             if(item.getSerial().equalsIgnoreCase(serial)){
@@ -108,11 +116,13 @@ public class FXMLController {
         return false;
     }
 
+    //make value input into monetary value
     public String getMonetaryValue(String input){
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         return nf.format(new BigDecimal(input));
     }
 
+    //make sure name is between 2-256 characters
     private boolean nameValid(String input){
         if(input.length() < 2 || input.length() > 256){
             errorText.setText("Name has to be between 2-256 characters in length.");
@@ -121,6 +131,7 @@ public class FXMLController {
         return true;
     }
 
+    //make sure serial is in proper format
     private boolean serialValid(String input) {
         if (!input.matches("[A-Za-z][-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}[-][0-9a-zA-Z]{3}")) {
             errorText.setText("Serial format: A-XXX-XXX-XXX \n <A is a letter> <X is a letter/number>");
@@ -129,6 +140,7 @@ public class FXMLController {
         return !serialInList(input);
     }
 
+    //make sure value input is valid number
     private boolean valueValid(String input) {
         double money;
         try
@@ -149,21 +161,25 @@ public class FXMLController {
         }
     }
 
+    //add item to observable list
     public void addToObservableList(String name, String serial, String value){
         data.add(new InventoryItem(name, serial, value));
     }
 
+    //remove all items
     @FXML
     void clearAll(ActionEvent event) {
         data.clear();
     }
 
+    //load an HTML file into inventory list
     @FXML
     void loadHTMLList(ActionEvent event) {
         File file = getFile();
         loadHTMLFile(file);
     }
 
+    //load an HTML file into inventory list
     private void loadHTMLFile(File file) {
         if(file != null){
             try {
@@ -190,18 +206,21 @@ public class FXMLController {
         }
     }
 
+    //load a TSV file into inventory list
     @FXML
     void loadTSVList(ActionEvent event) {
         File file = getFile();
         loadTSVFile(file);
     }
 
+    //load a JSON file into inventory list
     @FXML
     void loadJsonList(ActionEvent event) {
         File file = getFile();
         loadJsonFile(file);
     }
 
+    //load a JSON file into inventory list
     public void loadJsonFile(File file){
         JsonArray items = new JsonArray();
         try {
@@ -218,6 +237,7 @@ public class FXMLController {
         }
     }
 
+    //load a TSV file into inventory list
     public void loadTSVFile(File file) {
         if (file != null) {
             try {
@@ -239,18 +259,21 @@ public class FXMLController {
         }
     }
 
+    //remove item by serial number
     @FXML
     void removeList(ActionEvent event) {
         data.removeIf(item -> serialField.getText().equals(item.getSerial()));
         search.removeIf(item -> serialField.getText().equals(item.getSerial()));
     }
 
+    //save list into HTML
     @FXML
     void saveListHTML(ActionEvent event) {
         File file = getFile();
         writeSaveHTMLFile(file);
     }
 
+    //save list into HTML
     private void writeSaveHTMLFile(File file) {
         if (file != null) {
             try {
@@ -275,12 +298,14 @@ public class FXMLController {
         }
     }
 
+    //save list into JSON
     @FXML
     void saveListJSON(ActionEvent event) {
         File file = getFile();
         writeSaveJsonFile(file);
     }
 
+    //save list into JSON
     public void writeSaveJsonFile(File file){
         if (file != null) {
             try {
@@ -309,12 +334,14 @@ public class FXMLController {
         }
     }
 
+    //save list into TSV
     @FXML
     void saveListTSV(ActionEvent event) {
         File file  = getFile();
         writeSaveTSVFile(file);
     }
 
+    //save list into TSV
     public void writeSaveTSVFile(File file) {
         if (file != null) {
             try {
@@ -336,11 +363,13 @@ public class FXMLController {
         }
     }
 
+    //search list by name or serial
     @FXML
     void searchList(ActionEvent event) {
         isInList(nameField.getText(), serialField.getText());
     }
 
+    //search list by name or serial
     public boolean isInList(String name, String serial) {
         search.clear();
         boolean flag = false;
@@ -354,13 +383,18 @@ public class FXMLController {
         return flag;
     }
 
+    //show all items on list
     @FXML
     void showAll(ActionEvent event) {
         tableView.setItems(data);
     }
 
+    //show user guide
     @FXML
     void userGuide(ActionEvent event) {
+        Image picture = new Image("userGuide.png");
+        ImageView iv = new ImageView();
+        iv.setImage(picture);
 
     }
 
@@ -368,6 +402,7 @@ public class FXMLController {
         return data;
     }
 
+    //get a file from the user
     private File getFile(){
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
