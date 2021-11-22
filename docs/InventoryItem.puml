@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class InventoryItem {
+    -name : SimpleStringProperty
+    -serial : SimpleStringProperty
+    -value : SimpleStringProperty
+    +getName() : String
+    +getSerial() : String
+    +getValue() : String
+    +setName()
+    +setSerial()
+    +setValue()
+}
+
+@enduml

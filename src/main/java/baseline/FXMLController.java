@@ -10,8 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -180,7 +180,7 @@ public class FXMLController {
     }
 
     //load an HTML file into inventory list
-    private void loadHTMLFile(File file) {
+    public void loadHTMLFile(File file) {
         if(file != null){
             try {
                 FileInputStream inputFile = new FileInputStream(file);
@@ -392,10 +392,11 @@ public class FXMLController {
     //show user guide
     @FXML
     void userGuide(ActionEvent event) {
-        Image picture = new Image("userGuide.png");
-        ImageView iv = new ImageView();
-        iv.setImage(picture);
-
+        //https://github.com/gabotelle/telleria-app2/blob/master/docs/userGuide.png
+        ClipboardContent link = new ClipboardContent();
+        link.putString("https://github.com/gabotelle/telleria-app2/blob/master/docs/userGuide.png");
+        Clipboard.getSystemClipboard().setContent(link);
+        errorText.setText("Link copied to clipboard: https://github.com/gabotelle/telleria-app2/blob/master/docs/userGuide.png");
     }
 
     public ObservableList<InventoryItem> getObservableList() {

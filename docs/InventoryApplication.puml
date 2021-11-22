@@ -1,0 +1,46 @@
+@startuml
+class FXMLController {
+    -tableView : TableView<InventoryItem>
+    -nameCol : TableColumn<InventoryItem, String>
+    -serialCol : TableColumn<InventoryItem, String>
+    -valueCol : TableColumn<InventoryItem, String>
+    -nameField : TextField
+    -serialField : TextField
+    -valueField : TextField
+    -errorText : Text
+    -data : ObservableList<InventoryItem>
+    -search : ObservableList<InventoryItem>
+
+    +initialize()
+    +addToList()
+    +validInput() : boolean
+    -serialInList() : boolean
+    +getMonetaryValue() : String
+    -nameValid() : boolean
+    -serialValid() : boolean
+    -valueValid() : boolean
+    +addToObservableList()
+    +clearAll()
+    +loadHTMLList()
+    +loadHTMLFile()
+    +loadTSVList()
+    +loadJsonList()
+    +loadJsonFile()
+    +loadTSVFile()
+    +removeList()
+    +saveListHTML()
+    -writeSaveHTMLFile()
+    +saveListJSON()
+    +writeSaveJsonFile()
+    +saveListTSV()
+    +writeSaveTSVFile()
+    +searchList()
+    +isInList() : boolean
+    +showAll()
+    +userGuide()
+    +getObservableList() : ObservableList<InventoryItem>
+    -getFile() : File
+
+
+}
+@enduml
